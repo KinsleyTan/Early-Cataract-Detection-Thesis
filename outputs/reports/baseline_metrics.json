@@ -1,0 +1,40 @@
+{
+  "misclassified_test_images": 10,
+  "positive_class": "Cataract",
+  "test": {
+    "accuracy": 0.7142857142857143,
+    "f1": 0.8076923076923077,
+    "fn": 6,
+    "fp": 4,
+    "n": 35,
+    "precision": 0.84,
+    "roc_auc": 0.6759259259259259,
+    "sensitivity": 0.7777777777777778,
+    "specificity": 0.5,
+    "threshold": 0.5,
+    "tn": 4,
+    "tp": 21
+  },
+  "test_class_counts": {
+    "0": 8,
+    "1": 27
+  },
+  "test_evaluation_passes_in_this_run": 1,
+  "threshold": 0.5,
+  "validation": {
+    "accuracy": 0.6666666666666666,
+    "f1": 0.7368421052631579,
+    "fn": 3,
+    "fp": 2,
+    "n": 15,
+    "precision": 0.7777777777777778,
+    "roc_auc": 0.76,
+    "sensitivity": 0.7,
+    "specificity": 0.6,
+    "threshold": 0.5,
+    "tn": 3,
+    "tp": 7
+  },
+  "verdict": "BASELINE WORKS WITH WARNINGS",
+  "verdict_reason": "The pipeline is functional, but class performance is uneven or only moderate on the small locked test set."
+}

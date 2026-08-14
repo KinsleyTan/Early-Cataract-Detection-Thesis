@@ -1,0 +1,95 @@
+EFFICIENTNETB0 NORMAL VS CATARACT BASELINE
+================================================================================
+
+DATASET
+--------------------------------------------------------------------------------
+Train usable: 110 (Normal=45, Cataract=65)
+Validation usable: 15 (Normal=5, Cataract=10)
+Test usable: 35 (Normal=8, Cataract=27)
+Official train.xlsx, val.xlsx, and test.xlsx assignments were kept fixed.
+Other diagnoses were excluded; no random split was created.
+The locked test set was not used during fitting or model selection.
+
+CONFIGURATION
+--------------------------------------------------------------------------------
+Architecture: EfficientNetB0 (include_top=False)
+Pretrained weights: imagenet
+Image size: 224x224x3 RGB
+Preprocessing: RGB JPEG -> bilinear resize to 224x224 -> float32 [0,255]. No external normalization or preprocess_input; EfficientNetB0's internal Rescaling(1/255) performs the only normalization.
+Optimizer: Adam
+Initial learning rate: 0.001
+Loss: binary_crossentropy
+Batch size: 8
+Decision threshold: 0.5
+Random seed: 2026 (Python, NumPy, TensorFlow)
+Epochs requested: 30
+Epochs run: 9
+Best epoch: 3 (selected by minimum val_loss)
+Training-only augmentation: rotation factor +/-0.025, zoom +/-0.05, brightness +/-0.04, contrast +/-0.05, horizontal flip=False.
+Horizontal flipping was omitted to preserve laterality/acquisition geometry conservatively.
+
+MODEL
+--------------------------------------------------------------------------------
+Trainable parameters: 82,049
+Non-trainable parameters: 4,049,571
+Backbone: frozen EfficientNetB0; BatchNormalization used inference behavior.
+Fine-tuning used: False
+
+VALIDATION RESULT
+--------------------------------------------------------------------------------
+Accuracy: 0.6667 (66.7%)
+Precision: 0.7778 (77.8%)
+Sensitivity: 0.7000 (70.0%)
+Specificity: 0.6000 (60.0%)
+F1: 0.7368 (73.7%)
+ROC-AUC: 0.7600
+TN=3, FP=2, FN=3, TP=7
+
+LOCKED TEST RESULT
+--------------------------------------------------------------------------------
+Accuracy: 0.7143 (71.4%)
+Precision: 0.8400 (84.0%)
+Sensitivity / Cataract recall: 0.7778 (77.8%)
+Specificity: 0.5000 (50.0%)
+F1: 0.8077 (80.8%)
+ROC-AUC: 0.6759
+TN=4, FP=4, FN=6, TP=21
+Normal raw outcomes: 4/8 correct, 4/8 false positive.
+Cataract raw outcomes: 21/27 detected, 6/27 missed.
+
+ERRORS
+--------------------------------------------------------------------------------
+1069DLPSL (1).jpg: true=Cataract (1), predicted=Normal (0), p(Cataract)=0.390171, subject_id=1069, illumination=Diffuse Illumination, grade=severe
+1114DLPSL (3).jpg: true=Normal (0), predicted=Cataract (1), p(Cataract)=0.720669, subject_id=1114, illumination=Direct Focal Illumination, grade=Not Applicable
+1357URPSL (1).jpg: true=Cataract (1), predicted=Normal (0), p(Cataract)=0.492423, subject_id=1357, illumination=Diffuse Illumination, grade=mild
+1506DRPSL (2).jpg: true=Normal (0), predicted=Cataract (1), p(Cataract)=0.621390, subject_id=1506, illumination=Direct Focal Illumination, grade=Not Applicable
+1585DRPSL (2).jpg: true=Cataract (1), predicted=Normal (0), p(Cataract)=0.470558, subject_id=1585, illumination=Direct Focal Illumination, grade=mild
+1693DRPSL (3).jpg: true=Cataract (1), predicted=Normal (0), p(Cataract)=0.447935, subject_id=1693, illumination=Retro Illumination, grade=mild
+1792DLPSL (3).jpg: true=Cataract (1), predicted=Normal (0), p(Cataract)=0.476419, subject_id=1792, illumination=Direct Focal Illumination, grade=mild
+1997ULPSL (1).jpg: true=Cataract (1), predicted=Normal (0), p(Cataract)=0.491293, subject_id=1997, illumination=Diffuse Illumination, grade=mild
+11194ULPSL (1).jpg: true=Normal (0), predicted=Cataract (1), p(Cataract)=0.583629, subject_id=11194, illumination=Diffuse Illumination, grade=Not Applicable
+11288DLPSL (4).jpg: true=Normal (0), predicted=Cataract (1), p(Cataract)=0.563793, subject_id=11288, illumination=Direct Focal Illumination, grade=Not Applicable
+
+TRAINING BEHAVIOR
+--------------------------------------------------------------------------------
+Best validation-loss epoch: 3 of 9 run.
+Overfitting signal observed by the predefined history heuristic: True.
+No fine-tuning or hyperparameter search was performed.
+
+LIMITATIONS
+--------------------------------------------------------------------------------
+The dataset is small (110 training samples).
+The validation set has only 15 usable images, so model-selection estimates are unstable.
+The locked test set has only 35 usable images.
+The test set is class-imbalanced (8 Normal vs 27 Cataract).
+This is a broad Normal-vs-Cataract baseline, not the final early-stage cataract task.
+Percentages can change substantially with one image; raw counts should be emphasized.
+
+BASELINE VERDICT
+--------------------------------------------------------------------------------
+BASELINE WORKS WITH WARNINGS
+The pipeline is functional, but class performance is uneven or only moderate on the small locked test set.
+
+NEXT-STEP RECOMMENDATION
+--------------------------------------------------------------------------------
+The software pipeline is ready to be reconfigured for Normal vs Mild Cataract, but the new task should begin with a fresh class-count and split-adequacy review. Do not reuse locked-test outcomes to tune that future task.

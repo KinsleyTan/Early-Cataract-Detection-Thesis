@@ -1,0 +1,75 @@
+﻿section,severity,split,item,count,details
+B. Split summary,INFO,train,total rows,140,
+B. Split summary,INFO,train,unique subject IDs,129,
+B. Split summary,INFO,train,rows with resolved image,140,
+B. Split summary,INFO,train,usable Normal,45,
+B. Split summary,INFO,train,usable Cataract,65,
+F. Distributions,INFO,train,diagnosis,65,Cataract
+F. Distributions,INFO,train,diagnosis,45,Normal
+F. Distributions,INFO,train,diagnosis,30,Other
+F. Distributions,INFO,train,cataract_grade,75,Not Applicable
+F. Distributions,INFO,train,cataract_grade,54,mild
+F. Distributions,INFO,train,cataract_grade,11,severe
+F. Distributions,INFO,train,eye_side,66,Left
+F. Distributions,INFO,train,eye_side,74,Right
+F. Distributions,INFO,train,slit_lamp_illumination_type,48,Diffuse Illumination
+F. Distributions,INFO,train,slit_lamp_illumination_type,55,Direct Focal Illumination
+F. Distributions,INFO,train,slit_lamp_illumination_type,37,Retro Illumination
+F. Distributions,INFO,train,catataract_type,3,Cortical Cataract
+F. Distributions,INFO,train,catataract_type,45,Normal
+F. Distributions,INFO,train,catataract_type,61,Nuclear Cataract
+F. Distributions,INFO,train,catataract_type,1,Other
+F. Distributions,INFO,train,catataract_type,30,Pseudophakia
+F. Distributions,INFO,train,image_quality,124,Good
+F. Distributions,INFO,train,image_quality,12,Poor
+F. Distributions,INFO,train,image_quality,4,Very good
+B. Split summary,INFO,validation,total rows,20,
+B. Split summary,INFO,validation,unique subject IDs,19,
+B. Split summary,INFO,validation,rows with resolved image,20,
+B. Split summary,INFO,validation,usable Normal,5,
+B. Split summary,INFO,validation,usable Cataract,10,
+F. Distributions,INFO,validation,diagnosis,10,Cataract
+F. Distributions,INFO,validation,diagnosis,5,Normal
+F. Distributions,INFO,validation,diagnosis,5,Other
+F. Distributions,INFO,validation,cataract_grade,10,Not Applicable
+F. Distributions,INFO,validation,cataract_grade,7,mild
+F. Distributions,INFO,validation,cataract_grade,3,severe
+F. Distributions,INFO,validation,eye_side,8,Left
+F. Distributions,INFO,validation,eye_side,12,Right
+F. Distributions,INFO,validation,slit_lamp_illumination_type,4,Diffuse Illumination
+F. Distributions,INFO,validation,slit_lamp_illumination_type,9,Direct Focal Illumination
+F. Distributions,INFO,validation,slit_lamp_illumination_type,7,Retro Illumination
+F. Distributions,INFO,validation,catataract_type,5,Normal
+F. Distributions,INFO,validation,catataract_type,10,Nuclear Cataract
+F. Distributions,INFO,validation,catataract_type,5,Pseudophakia
+F. Distributions,INFO,validation,image_quality,15,Good
+F. Distributions,INFO,validation,image_quality,4,Poor
+F. Distributions,INFO,validation,image_quality,1,Very good
+B. Split summary,INFO,test,total rows,40,
+B. Split summary,INFO,test,unique subject IDs,37,
+B. Split summary,INFO,test,rows with resolved image,40,
+B. Split summary,INFO,test,usable Normal,8,
+B. Split summary,INFO,test,usable Cataract,27,
+F. Distributions,INFO,test,diagnosis,27,Cataract
+F. Distributions,INFO,test,diagnosis,8,Normal
+F. Distributions,INFO,test,diagnosis,5,Other
+F. Distributions,INFO,test,cataract_grade,13,Not Applicable
+F. Distributions,INFO,test,cataract_grade,21,mild
+F. Distributions,INFO,test,cataract_grade,6,severe
+F. Distributions,INFO,test,eye_side,18,Left
+F. Distributions,INFO,test,eye_side,22,Right
+F. Distributions,INFO,test,slit_lamp_illumination_type,11,Diffuse Illumination
+F. Distributions,INFO,test,slit_lamp_illumination_type,15,Direct Focal Illumination
+F. Distributions,INFO,test,slit_lamp_illumination_type,14,Retro Illumination
+F. Distributions,INFO,test,catataract_type,1,Cortical Cataract
+F. Distributions,INFO,test,catataract_type,8,Normal
+F. Distributions,INFO,test,catataract_type,25,Nuclear Cataract
+F. Distributions,INFO,test,catataract_type,1,Posterior Subcapsular Cataract
+F. Distributions,INFO,test,catataract_type,5,Pseudophakia
+F. Distributions,INFO,test,image_quality,34,Good
+F. Distributions,INFO,test,image_quality,4,Poor
+F. Distributions,INFO,test,image_quality,2,Very good
+C. Subject leakage,PASS,train vs validation,overlapping subject IDs,0,none
+C. Subject leakage,PASS,train vs test,overlapping subject IDs,0,none
+C. Subject leakage,PASS,validation vs test,overlapping subject IDs,0,none
+H. Verdict,INFO,all,READY FOR BASELINE TRAINING,,"No critical, error, or warning findings were detected by this audit."

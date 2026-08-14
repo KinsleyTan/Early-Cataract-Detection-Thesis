@@ -1,0 +1,87 @@
+CATARACT DATASET AUDIT
+================================================================================
+Audit time (UTC): 2026-08-14T08:54:12.775078+00:00
+Dataset root (read-only): D:\Pre-thesis (Thesis)\Code\Fixed Dataset\Clean
+Image directory: D:\Pre-thesis (Thesis)\Code\Fixed Dataset\Clean\Clean images
+Official split policy: train.xlsx, val.xlsx, and test.xlsx are fixed splits.
+No random split, reshuffling, cleaning, deletion, moving, or relabeling was performed.
+Baseline label policy: Normal -> 0; Cataract -> 1; Other -> excluded.
+Usable means a Normal/Cataract row with a uniquely resolved, readable image; suspicious rows remain reported and are not silently discarded.
+Near-duplicate criterion: 64-bit pHash, cross-split Hamming distance <= 6; SHA-256-identical pairs are reported separately.
+
+A. DATASET STRUCTURE
+--------------------------------------------------------------------------------
+train: train.xlsx; sheet=train; data_rows=140; columns=9
+  metadata: id, filename, eye_side, diagnosis, cataract_grade, reflection, image_quality, slit_lamp_illumination_type, catataract_type
+validation: val.xlsx; sheet=val; data_rows=20; columns=9
+  metadata: id, filename, eye_side, diagnosis, cataract_grade, reflection, image_quality, slit_lamp_illumination_type, catataract_type
+test: test.xlsx; sheet=test; data_rows=40; columns=9
+  metadata: id, filename, eye_side, diagnosis, cataract_grade, reflection, image_quality, slit_lamp_illumination_type, catataract_type
+Clean images inventory: 200 file(s); .jpg=200
+Referenced physical images: 200
+Unreferenced/orphan images: 0
+
+B. SPLIT SUMMARY
+--------------------------------------------------------------------------------
+split       rows  unique_subjects  resolved_images  usable_normal  usable_cataract  excluded_other
+train        140              129              140             45               65              30
+validation    20               19               20              5               10               5
+test          40               37               40              8               27               5
+
+Within-split subject multiplicity (descriptive, not automatically leakage):
+train: multiple_images=10 [1048, 11097, 11274, 1185, 1351, 1388, 1615, 1692, 1839, 1861]; both_eyes=5 [11097, 1351, 1388, 1692, 1839]; multiple_illumination=8 [1048, 11097, 1351, 1388, 1615, 1692, 1839, 1861]
+validation: multiple_images=1 [11187]; both_eyes=0 [none]; multiple_illumination=0 [none]
+test: multiple_images=3 [1396, 1601, 1693]; both_eyes=2 [1601, 1693]; multiple_illumination=1 [1601]
+
+C. SUBJECT LEAKAGE
+--------------------------------------------------------------------------------
+train vs validation: PASS; overlap=0; IDs=none
+train vs test: PASS; overlap=0; IDs=none
+validation vs test: PASS; overlap=0; IDs=none
+
+D. EXACT DUPLICATES
+--------------------------------------------------------------------------------
+Repeated filename groups (any split): 0
+SHA-256 duplicate-content groups (different files or repeated references): 0
+SHA-256 duplicate-content groups crossing splits: 0
+
+E. NEAR DUPLICATES
+--------------------------------------------------------------------------------
+Criterion: 64-bit pHash Hamming distance <= 6, only across different splits, excluding SHA-256 exact matches.
+Suspicious cross-split pairs: 0
+
+F. LABEL DISTRIBUTION
+--------------------------------------------------------------------------------
+train diagnosis: Cataract=65, Normal=45, Other=30
+train cataract_grade: mild=54, Not Applicable=75, severe=11
+validation diagnosis: Cataract=10, Normal=5, Other=5
+validation cataract_grade: mild=7, Not Applicable=10, severe=3
+test diagnosis: Cataract=27, Normal=8, Other=5
+test cataract_grade: mild=21, Not Applicable=13, severe=6
+all diagnosis: Cataract=102, Normal=58, Other=40
+all cataract_grade: mild=82, Not Applicable=98, severe=20
+
+G. METADATA ISSUES AND OTHER DISTRIBUTIONS
+--------------------------------------------------------------------------------
+train eye_side: Left=66, Right=74
+train slit_lamp_illumination_type: Diffuse Illumination=48, Direct Focal Illumination=55, Retro Illumination=37
+train catataract_type: Cortical Cataract=3, Normal=45, Nuclear Cataract=61, Other=1, Pseudophakia=30
+train image_quality: Good=124, Poor=12, Very good=4
+validation eye_side: Left=8, Right=12
+validation slit_lamp_illumination_type: Diffuse Illumination=4, Direct Focal Illumination=9, Retro Illumination=7
+validation catataract_type: Normal=5, Nuclear Cataract=10, Pseudophakia=5
+validation image_quality: Good=15, Poor=4, Very good=1
+test eye_side: Left=18, Right=22
+test slit_lamp_illumination_type: Diffuse Illumination=11, Direct Focal Illumination=15, Retro Illumination=14
+test catataract_type: Cortical Cataract=1, Normal=8, Nuclear Cataract=25, Posterior Subcapsular Cataract=1, Pseudophakia=5
+test image_quality: Good=34, Poor=4, Very good=2
+
+Duplicate spreadsheet row groups: 0
+Unreadable referenced images: 0
+No metadata or integrity findings.
+
+H. BASELINE READINESS VERDICT
+--------------------------------------------------------------------------------
+READY FOR BASELINE TRAINING
+No critical, error, or warning findings were detected by this audit.
+The test split remains audit-only and was not used for model-development decisions.

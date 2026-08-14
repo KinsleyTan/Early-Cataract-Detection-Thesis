@@ -1,0 +1,138 @@
+{
+  "checks": {
+    "audit_ready": {
+      "details": "D:\\Pre-thesis (Thesis)\\Code\\Cat_screen_baseline\\outputs\\reports\\dataset_audit.txt",
+      "pass": true
+    },
+    "binary_labels_only": {
+      "details": [],
+      "pass": true
+    },
+    "fixed_split_policy": {
+      "details": "No random split operation is used; official workbooks are loaded directly.",
+      "pass": true
+    },
+    "label_1_is_cataract": {
+      "details": [],
+      "pass": true
+    },
+    "other_excluded": {
+      "details": [
+        "Cataract",
+        "Normal"
+      ],
+      "pass": true
+    },
+    "subject_overlap_train_test": {
+      "details": [],
+      "pass": true
+    },
+    "subject_overlap_train_validation": {
+      "details": [],
+      "pass": true
+    },
+    "subject_overlap_validation_test": {
+      "details": [],
+      "pass": true
+    },
+    "test_total_rows": {
+      "details": {
+        "actual": 40,
+        "expected": 40
+      },
+      "pass": true
+    },
+    "test_usable_counts": {
+      "details": {
+        "actual": {
+          "Cataract": 27,
+          "Normal": 8
+        },
+        "expected": {
+          "Cataract": 27,
+          "Normal": 8
+        }
+      },
+      "pass": true
+    },
+    "test_workbook_unchanged": {
+      "details": {
+        "actual": "91EF0D53A2C5D48510FEB26C763B5D6C10003331ACFB2A0439C290A01D4E5106",
+        "expected": "91EF0D53A2C5D48510FEB26C763B5D6C10003331ACFB2A0439C290A01D4E5106"
+      },
+      "pass": true
+    },
+    "train_total_rows": {
+      "details": {
+        "actual": 140,
+        "expected": 140
+      },
+      "pass": true
+    },
+    "train_usable_counts": {
+      "details": {
+        "actual": {
+          "Cataract": 65,
+          "Normal": 45
+        },
+        "expected": {
+          "Cataract": 65,
+          "Normal": 45
+        }
+      },
+      "pass": true
+    },
+    "train_workbook_unchanged": {
+      "details": {
+        "actual": "9A3177E2060A3886D8705EC3BE47B30B6A926D96BE32016B57F623C37B46C4BA",
+        "expected": "9A3177E2060A3886D8705EC3BE47B30B6A926D96BE32016B57F623C37B46C4BA"
+      },
+      "pass": true
+    },
+    "training_code_test_isolation": {
+      "details": {
+        "prohibited_literals": [],
+        "training_splits": [
+          "train",
+          "validation"
+        ]
+      },
+      "pass": true
+    },
+    "validation_total_rows": {
+      "details": {
+        "actual": 20,
+        "expected": 20
+      },
+      "pass": true
+    },
+    "validation_usable_counts": {
+      "details": {
+        "actual": {
+          "Cataract": 10,
+          "Normal": 5
+        },
+        "expected": {
+          "Cataract": 10,
+          "Normal": 5
+        }
+      },
+      "pass": true
+    },
+    "validation_workbook_unchanged": {
+      "details": {
+        "actual": "9A44AFEA0DD9143A3BF4874E4642AB12796653F3A1CC7C13EC905B8DB027C492",
+        "expected": "9A44AFEA0DD9143A3BF4874E4642AB12796653F3A1CC7C13EC905B8DB027C492"
+      },
+      "pass": true
+    }
+  },
+  "config_sha256": "2234F4D8C2EEB9DAE822FAAC42D5ACA8680EDCFA8E017F5092087F1A6869B8B1",
+  "dataset_root": "D:\\Pre-thesis (Thesis)\\Code\\Fixed Dataset\\Clean",
+  "overall_pass": true,
+  "workbook_sha256": {
+    "test": "91EF0D53A2C5D48510FEB26C763B5D6C10003331ACFB2A0439C290A01D4E5106",
+    "train": "9A3177E2060A3886D8705EC3BE47B30B6A926D96BE32016B57F623C37B46C4BA",
+    "validation": "9A44AFEA0DD9143A3BF4874E4642AB12796653F3A1CC7C13EC905B8DB027C492"
+  }
+}
