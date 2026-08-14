@@ -76,13 +76,14 @@ def plot_roc(
     probabilities: np.ndarray,
     roc_auc: float,
     output_path: Path,
+    title: str = "Locked Test ROC Curve",
 ) -> None:
     false_positive_rate, true_positive_rate, _ = roc_curve(true_labels, probabilities)
     fig, axis = plt.subplots(figsize=(6, 6))
     axis.plot(false_positive_rate, true_positive_rate, linewidth=2, label=f"AUC = {roc_auc:.3f}")
     axis.plot([0, 1], [0, 1], linestyle="--", color="gray", label="Chance")
     axis.set(
-        title="Locked Test ROC Curve",
+        title=title,
         xlabel="False Positive Rate",
         ylabel="True Positive Rate (Sensitivity)",
         xlim=(0, 1),
@@ -95,16 +96,21 @@ def plot_roc(
     plt.close(fig)
 
 
-def plot_confusion(metrics: dict[str, Any], output_path: Path) -> None:
+def plot_confusion(
+    metrics: dict[str, Any],
+    output_path: Path,
+    class_names: tuple[str, str] = ("Normal", "Cataract"),
+    title: str = "Locked Test Confusion Matrix",
+) -> None:
     matrix = np.array([[metrics["tn"], metrics["fp"]], [metrics["fn"], metrics["tp"]]])
     row_totals = matrix.sum(axis=1, keepdims=True)
     percentages = np.divide(matrix, row_totals, where=row_totals != 0) * 100.0
     fig, axis = plt.subplots(figsize=(6, 5))
     image = axis.imshow(matrix, cmap="Blues")
     fig.colorbar(image, ax=axis, fraction=0.046, pad=0.04)
-    axis.set_xticks([0, 1], labels=["Normal", "Cataract"])
-    axis.set_yticks([0, 1], labels=["Normal", "Cataract"])
-    axis.set(xlabel="Predicted class", ylabel="True class", title="Locked Test Confusion Matrix")
+    axis.set_xticks([0, 1], labels=list(class_names))
+    axis.set_yticks([0, 1], labels=list(class_names))
+    axis.set(xlabel="Predicted class", ylabel="True class", title=title)
     for row in range(2):
         for column in range(2):
             axis.text(
@@ -118,4 +124,3 @@ def plot_confusion(metrics: dict[str, Any], output_path: Path) -> None:
     fig.tight_layout()
     fig.savefig(output_path, dpi=180)
     plt.close(fig)
-

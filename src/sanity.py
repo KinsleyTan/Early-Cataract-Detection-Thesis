@@ -16,6 +16,7 @@ from utils import (
     dataset_root,
     load_config,
     output_path,
+    project_path,
     sha256_file,
     write_json,
 )
@@ -44,11 +45,19 @@ def run_checks(config: dict[str, Any]) -> dict[str, Any]:
     root = dataset_root(config)
     checks: dict[str, dict[str, Any]] = {}
 
-    audit_path = output_path(config, "reports_dir") / "dataset_audit.txt"
+    configured_audit = config["paths"].get("audit_report")
+    audit_path = (
+        project_path(configured_audit)
+        if configured_audit
+        else output_path(config, "reports_dir") / "dataset_audit.txt"
+    )
     audit_text = audit_path.read_text(encoding="utf-8") if audit_path.is_file() else ""
+    ready_phrase = config.get("audit", {}).get(
+        "ready_phrase", "READY FOR BASELINE TRAINING"
+    )
     checks["audit_ready"] = result(
-        "READY FOR BASELINE TRAINING" in audit_text,
-        str(audit_path),
+        ready_phrase in audit_text,
+        {"path": str(audit_path), "required_phrase": ready_phrase},
     )
 
     all_rows = {}
@@ -157,4 +166,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

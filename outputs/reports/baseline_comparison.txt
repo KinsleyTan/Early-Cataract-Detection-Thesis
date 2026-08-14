@@ -1,0 +1,51 @@
+CONTROLLED BASELINE COMPARISON
+Normal vs All Cataract compared with Normal vs Mild Cataract
+========================================================================================
+
+EXPERIMENT CONTROL
+----------------------------------------------------------------------------------------
+Training protocol identical: True
+Both runs used EfficientNetB0, ImageNet weights, frozen backbone, 224x224 RGB,
+the same 64-unit head, dropout 0.30, Adam 0.001, batch size 8, augmentation,
+seed 2026, callbacks, validation-loss selection, and fixed threshold 0.5.
+No fine-tuning, test-based selection, model comparison, or threshold tuning was used.
+
+DATASET COMPARISON
+----------------------------------------------------------------------------------------
+task                         train                 validation            locked test
+Normal vs All Cataract       45 N / 65 C = 110     5 N / 10 C = 15      8 N / 27 C = 35
+Normal vs Mild Cataract      45 N / 54 M = 99      5 N / 7 M = 12       8 N / 21 M = 29
+Mild-task overlap: 0 subjects in every split pair; exact duplicates=0; near duplicates=0.
+
+LOCKED TEST METRICS
+----------------------------------------------------------------------------------------
+metric             All Cataract      Mild Cataract      Mild minus All
+Accuracy                  71.4%              44.8%              -26.6 pp
+Precision                 84.0%              72.7%              -11.3 pp
+Sensitivity               77.8%              38.1%              -39.7 pp
+Specificity               50.0%              62.5%              +12.5 pp
+F1                        80.8%              50.0%              -30.8 pp
+ROC-AUC                   0.676              0.524              -0.152
+
+CONFUSION COUNTS
+----------------------------------------------------------------------------------------
+All Cataract:  TN=4, FP=4, FN=6, TP=21 (10 errors / 35)
+Mild Cataract: TN=5, FP=3, FN=13, TP=8 (16 errors / 29)
+
+TRAINING BEHAVIOR
+----------------------------------------------------------------------------------------
+All Cataract: best epoch 3 of 9; overfitting=True.
+Mild Cataract: best epoch 11 of 17; overfitting=True.
+
+MAIN FAILURE PATTERN
+----------------------------------------------------------------------------------------
+The Mild model missed 13 of 21 Mild Cataract images (false-negative rate 61.9%).
+10 of those 13 misses had p(Mild Cataract) below 0.40, so the failure is not only a few threshold-borderline cases.
+ROC-AUC fell from 0.676 to 0.524, indicating near-chance ranking after severe cases were removed.
+The central failure is under-detection of subtle mild disease as Normal, not excessive
+false alarms alone. Locked-test threshold tuning is neither justified nor permitted.
+
+THESIS BASELINE VIABILITY
+----------------------------------------------------------------------------------------
+The Normal-vs-Mild task is viable as a thesis research problem and this run is a valid weak reference baseline, but the current frozen EfficientNetB0 result is not a reliable detector. It should motivate a later, separately justified improvement rather than be presented as adequate performance.
+The 12-image validation set and 29-image test set make all estimates highly uncertain.

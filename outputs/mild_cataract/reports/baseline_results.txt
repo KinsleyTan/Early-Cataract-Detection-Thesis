@@ -1,0 +1,102 @@
+EFFICIENTNETB0 NORMAL VS MILD CATARACT BASELINE
+================================================================================
+
+DATASET
+--------------------------------------------------------------------------------
+Train usable: 99 (Normal=45, Mild Cataract=54)
+Validation usable: 12 (Normal=5, Mild Cataract=7)
+Test usable: 29 (Normal=8, Mild Cataract=21)
+Official train.xlsx, val.xlsx, and test.xlsx assignments were kept fixed.
+Class 0=Normal; class 1=Mild Cataract; Severe Cataract and Other excluded.
+No random split was created.
+The locked test set was not used during fitting or model selection.
+
+CONFIGURATION
+--------------------------------------------------------------------------------
+Architecture: EfficientNetB0 (include_top=False)
+Pretrained weights: imagenet
+Image size: 224x224x3 RGB
+Preprocessing: RGB JPEG -> bilinear resize to 224x224 -> float32 [0,255]. No external normalization or preprocess_input; EfficientNetB0's internal Rescaling(1/255) performs the only normalization.
+Optimizer: Adam
+Initial learning rate: 0.001
+Loss: binary_crossentropy
+Batch size: 8
+Decision threshold: 0.5
+Random seed: 2026 (Python, NumPy, TensorFlow)
+Epochs requested: 30
+Epochs run: 17
+Best epoch: 11 (selected by minimum val_loss)
+Training-only augmentation: rotation factor +/-0.025, zoom +/-0.05, brightness +/-0.04, contrast +/-0.05, horizontal flip=False.
+Horizontal flipping was omitted to preserve laterality/acquisition geometry conservatively.
+
+MODEL
+--------------------------------------------------------------------------------
+Trainable parameters: 82,049
+Non-trainable parameters: 4,049,571
+Backbone: frozen EfficientNetB0; BatchNormalization used inference behavior.
+Fine-tuning used: False
+
+VALIDATION RESULT
+--------------------------------------------------------------------------------
+Accuracy: 0.6667 (66.7%)
+Precision: 0.7143 (71.4%)
+Sensitivity: 0.7143 (71.4%)
+Specificity: 0.6000 (60.0%)
+F1: 0.7143 (71.4%)
+ROC-AUC: 0.7429
+TN=3, FP=2, FN=2, TP=5
+
+LOCKED TEST RESULT
+--------------------------------------------------------------------------------
+Accuracy: 0.4483 (44.8%)
+Precision: 0.7273 (72.7%)
+Sensitivity / Mild Cataract recall: 0.3810 (38.1%)
+Specificity: 0.6250 (62.5%)
+F1: 0.5000 (50.0%)
+ROC-AUC: 0.5238
+TN=5, FP=3, FN=13, TP=8
+Normal raw outcomes: 5/8 correct, 3/8 false positive.
+Mild Cataract raw outcomes: 8/21 detected, 13/21 missed.
+
+ERRORS
+--------------------------------------------------------------------------------
+1114DLPSL (3).jpg: true=Normal (0), predicted=Mild Cataract (1), p(Mild Cataract)=0.807717, subject_id=1114, illumination=Direct Focal Illumination, grade=Not Applicable
+1357URPSL (1).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.362844, subject_id=1357, illumination=Diffuse Illumination, grade=mild
+1371DRPSL (5).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.268316, subject_id=1371, illumination=Retro Illumination, grade=mild
+1389DRPSL (5).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.491964, subject_id=1389, illumination=Retro Illumination, grade=mild
+1396DRPSL (6).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.293269, subject_id=1396, illumination=Retro Illumination, grade=mild
+1506DRPSL (2).jpg: true=Normal (0), predicted=Mild Cataract (1), p(Mild Cataract)=0.506326, subject_id=1506, illumination=Direct Focal Illumination, grade=Not Applicable
+1585DRPSL (2).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.161221, subject_id=1585, illumination=Direct Focal Illumination, grade=mild
+1603DLPSL (2).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.371592, subject_id=1603, illumination=Direct Focal Illumination, grade=mild
+1658DRPSL (3).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.490229, subject_id=1658, illumination=Direct Focal Illumination, grade=mild
+1693DLPSL (4).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.445162, subject_id=1693, illumination=Retro Illumination, grade=mild
+1693DRPSL (3).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.162230, subject_id=1693, illumination=Retro Illumination, grade=mild
+1792DLPSL (3).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.125858, subject_id=1792, illumination=Direct Focal Illumination, grade=mild
+1877DLPSL (4).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.279219, subject_id=1877, illumination=Retro Illumination, grade=mild
+1906URPSL (2).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.319747, subject_id=1906, illumination=Direct Focal Illumination, grade=mild
+1997ULPSL (1).jpg: true=Mild Cataract (1), predicted=Normal (0), p(Mild Cataract)=0.166329, subject_id=1997, illumination=Diffuse Illumination, grade=mild
+11288DLPSL (4).jpg: true=Normal (0), predicted=Mild Cataract (1), p(Mild Cataract)=0.634054, subject_id=11288, illumination=Direct Focal Illumination, grade=Not Applicable
+
+TRAINING BEHAVIOR
+--------------------------------------------------------------------------------
+Best validation-loss epoch: 11 of 17 run.
+Overfitting signal observed by the predefined history heuristic: True.
+No fine-tuning or hyperparameter search was performed.
+
+LIMITATIONS
+--------------------------------------------------------------------------------
+The dataset is small (99 training samples).
+The validation set has only 12 usable images, so model-selection estimates are unstable.
+The locked test set has only 29 usable images.
+The test set is class-imbalanced (8 Normal vs 21 Mild Cataract).
+This is the controlled Normal vs Mild Cataract baseline.
+Percentages can change substantially with one image; raw counts should be emphasized.
+
+BASELINE VERDICT
+--------------------------------------------------------------------------------
+BASELINE UNRELIABLE
+Discrimination or balanced class performance is too weak for a trustworthy baseline.
+
+NEXT-STEP RECOMMENDATION
+--------------------------------------------------------------------------------
+Treat this as the initial thesis-task baseline and diagnose its fixed-threshold false-positive/false-negative pattern before proposing later improvements. Do not tune this completed run from locked-test outcomes.

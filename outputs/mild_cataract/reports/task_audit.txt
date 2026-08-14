@@ -1,0 +1,34 @@
+NORMAL VS MILD CATARACT TARGET AUDIT
+================================================================================
+Verdict: MILD TASK AUDIT PASSED WITH WARNINGS
+MILD TASK AUDIT PASSED
+Official train.xlsx, val.xlsx, and test.xlsx assignments remain fixed.
+Label 0: diagnosis=Normal.
+Label 1: diagnosis=Cataract AND cataract_grade=mild.
+Severe Cataract and Other are excluded without modifying source rows.
+Protocol matches completed Normal-vs-All-Cataract baseline: True
+
+FILTERED SPLIT COUNTS
+--------------------------------------------------------------------------------
+split       source  normal  mild  usable  unique_subjects  excluded_severe  excluded_other
+train          140      45    54      99               93               11              30
+validation      20       5     7      12               11                3               5
+test            40       8    21      29               27                6               5
+
+LEAKAGE AND DUPLICATES
+--------------------------------------------------------------------------------
+Subject overlap train_vs_validation: 0 (none)
+Subject overlap train_vs_test: 0 (none)
+Subject overlap validation_vs_test: 0 (none)
+Duplicate filenames across splits: 0
+SHA-256 duplicate groups across splits: 0
+pHash near-duplicate pairs across splits: 0 (64-bit pHash Hamming distance <= 6)
+
+WARNINGS
+--------------------------------------------------------------------------------
+Validation remains very small (12 usable images).
+Locked test remains small (29 usable images).
+
+FAILURES
+--------------------------------------------------------------------------------
+none

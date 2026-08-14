@@ -1,0 +1,41 @@
+{
+  "misclassified_test_images": 16,
+  "positive_class": "Mild Cataract",
+  "task": "Normal vs Mild Cataract",
+  "test": {
+    "accuracy": 0.4482758620689655,
+    "f1": 0.5,
+    "fn": 13,
+    "fp": 3,
+    "n": 29,
+    "precision": 0.7272727272727273,
+    "roc_auc": 0.5238095238095238,
+    "sensitivity": 0.38095238095238093,
+    "specificity": 0.625,
+    "threshold": 0.5,
+    "tn": 5,
+    "tp": 8
+  },
+  "test_class_counts": {
+    "0": 8,
+    "1": 21
+  },
+  "test_evaluation_passes_in_this_run": 1,
+  "threshold": 0.5,
+  "validation": {
+    "accuracy": 0.6666666666666666,
+    "f1": 0.7142857142857143,
+    "fn": 2,
+    "fp": 2,
+    "n": 12,
+    "precision": 0.7142857142857143,
+    "roc_auc": 0.7428571428571429,
+    "sensitivity": 0.7142857142857143,
+    "specificity": 0.6,
+    "threshold": 0.5,
+    "tn": 3,
+    "tp": 5
+  },
+  "verdict": "BASELINE UNRELIABLE",
+  "verdict_reason": "Discrimination or balanced class performance is too weak for a trustworthy baseline."
+}

@@ -1,0 +1,63 @@
+{
+  "config_sha256": "AD5BD2B373012876E10AA9E0C54F6249D30145E68CB47A32DBF1ECD233F7FCB6",
+  "counts": {
+    "test": {
+      "Excluded Other": 5,
+      "Excluded Severe Cataract": 6,
+      "Mild Cataract": 21,
+      "Normal": 8,
+      "mild_cataract": 21,
+      "normal": 8,
+      "source_rows": 40,
+      "unique_subjects": 27,
+      "usable_total": 29
+    },
+    "train": {
+      "Excluded Other": 30,
+      "Excluded Severe Cataract": 11,
+      "Mild Cataract": 54,
+      "Normal": 45,
+      "mild_cataract": 54,
+      "normal": 45,
+      "source_rows": 140,
+      "unique_subjects": 93,
+      "usable_total": 99
+    },
+    "validation": {
+      "Excluded Other": 5,
+      "Excluded Severe Cataract": 3,
+      "Mild Cataract": 7,
+      "Normal": 5,
+      "mild_cataract": 7,
+      "normal": 5,
+      "source_rows": 20,
+      "unique_subjects": 11,
+      "usable_total": 12
+    }
+  },
+  "dataset_root": "D:\\Pre-thesis (Thesis)\\Code\\Fixed Dataset\\Clean",
+  "duplicate_filename_groups_across_splits": 0,
+  "exact_duplicate_groups_across_splits": 0,
+  "failures": [],
+  "near_duplicate_pairs_across_splits": [],
+  "overall_pass": true,
+  "phash_threshold": 6,
+  "protocol_matches_reference": true,
+  "ready_phrase": "MILD TASK AUDIT PASSED",
+  "reference_config_sha256": "2234F4D8C2EEB9DAE822FAAC42D5ACA8680EDCFA8E017F5092087F1A6869B8B1",
+  "subject_overlap": {
+    "train_vs_test": [],
+    "train_vs_validation": [],
+    "validation_vs_test": []
+  },
+  "verdict": "MILD TASK AUDIT PASSED WITH WARNINGS",
+  "warnings": [
+    "Validation remains very small (12 usable images).",
+    "Locked test remains small (29 usable images)."
+  ],
+  "workbook_sha256": {
+    "test": "91EF0D53A2C5D48510FEB26C763B5D6C10003331ACFB2A0439C290A01D4E5106",
+    "train": "9A3177E2060A3886D8705EC3BE47B30B6A926D96BE32016B57F623C37B46C4BA",
+    "validation": "9A44AFEA0DD9143A3BF4874E4642AB12796653F3A1CC7C13EC905B8DB027C492"
+  }
+}

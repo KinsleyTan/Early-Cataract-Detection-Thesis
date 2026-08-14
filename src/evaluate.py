@@ -33,7 +33,11 @@ def metric_line(name: str, value: float) -> str:
 
 
 def export_predictions(
-    samples: list[Sample], probabilities: np.ndarray, predicted: np.ndarray, path: Path
+    samples: list[Sample],
+    probabilities: np.ndarray,
+    predicted: np.ndarray,
+    path: Path,
+    class_names: tuple[str, str],
 ) -> list[dict[str, Any]]:
     rows = []
     for sample, probability, prediction in zip(samples, probabilities, predicted, strict=True):
@@ -43,11 +47,12 @@ def export_predictions(
                 "subject_id": sample.subject_id,
                 "eye_side": sample.eye_side,
                 "true_label": sample.label,
-                "true_class_name": sample.diagnosis,
+                "true_class_name": class_names[sample.label],
                 "predicted_probability_cataract": f"{float(probability):.8f}",
                 "predicted_label": int(prediction),
-                "predicted_class_name": "Cataract" if int(prediction) == 1 else "Normal",
+                "predicted_class_name": class_names[int(prediction)],
                 "correct": int(prediction) == sample.label,
+                "outcome": "correct" if int(prediction) == sample.label else "incorrect",
             }
         )
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -93,18 +98,28 @@ def build_report(
     test_expected = config["fixed_splits"]["test"]["expected_usable"]
     augmentation = config["augmentation"]
     train_cfg = config["training"]
+    task_name = config["experiment"].get("display_name", "Normal vs Cataract")
+    negative_class = config["label_policy"].get("negative_class", "Normal")
+    positive_class = config["label_policy"].get("positive_class", "Cataract")
+    grades = config["label_policy"].get("cataract_grades")
+    label_policy_text = (
+        f"Class 0={negative_class}; class 1={positive_class}; Severe Cataract and Other excluded."
+        if grades is not None
+        else f"Class 0={negative_class}; class 1={positive_class}; Other excluded."
+    )
     verdict, verdict_reason = choose_verdict(test_metrics)
     lines = [
-        "EFFICIENTNETB0 NORMAL VS CATARACT BASELINE",
+        f"EFFICIENTNETB0 {task_name.upper()} BASELINE",
         "=" * 80,
         "",
         "DATASET",
         "-" * 80,
-        f"Train usable: {sum(train_expected.values())} (Normal={train_expected['Normal']}, Cataract={train_expected['Cataract']})",
-        f"Validation usable: {sum(val_expected.values())} (Normal={val_expected['Normal']}, Cataract={val_expected['Cataract']})",
-        f"Test usable: {sum(test_expected.values())} (Normal={test_expected['Normal']}, Cataract={test_expected['Cataract']})",
+        f"Train usable: {sum(train_expected.values())} ({negative_class}={train_expected['Normal']}, {positive_class}={train_expected['Cataract']})",
+        f"Validation usable: {sum(val_expected.values())} ({negative_class}={val_expected['Normal']}, {positive_class}={val_expected['Cataract']})",
+        f"Test usable: {sum(test_expected.values())} ({negative_class}={test_expected['Normal']}, {positive_class}={test_expected['Cataract']})",
         "Official train.xlsx, val.xlsx, and test.xlsx assignments were kept fixed.",
-        "Other diagnoses were excluded; no random split was created.",
+        label_policy_text,
+        "No random split was created.",
         "The locked test set was not used during fitting or model selection.",
         "",
         "CONFIGURATION",
@@ -154,7 +169,7 @@ def build_report(
         "-" * 80,
         metric_line("Accuracy", test_metrics["accuracy"]),
         metric_line("Precision", test_metrics["precision"]),
-        metric_line("Sensitivity / Cataract recall", test_metrics["sensitivity"]),
+        metric_line(f"Sensitivity / {positive_class} recall", test_metrics["sensitivity"]),
         metric_line("Specificity", test_metrics["specificity"]),
         metric_line("F1", test_metrics["f1"]),
         f"ROC-AUC: {test_metrics['roc_auc']:.4f}",
@@ -164,7 +179,7 @@ def build_report(
             f"{test_metrics['fp']}/{test_metrics['tn'] + test_metrics['fp']} false positive."
         ),
         (
-            f"Cataract raw outcomes: {test_metrics['tp']}/{test_metrics['tp'] + test_metrics['fn']} detected, "
+            f"{positive_class} raw outcomes: {test_metrics['tp']}/{test_metrics['tp'] + test_metrics['fn']} detected, "
             f"{test_metrics['fn']}/{test_metrics['tp'] + test_metrics['fn']} missed."
         ),
         "",
@@ -176,9 +191,9 @@ def build_report(
     else:
         for sample, probability, predicted in errors:
             lines.append(
-                f"{sample.filename}: true={sample.diagnosis} ({sample.label}), "
-                f"predicted={'Cataract' if predicted == 1 else 'Normal'} ({predicted}), "
-                f"p(Cataract)={probability:.6f}, subject_id={sample.subject_id}, "
+                f"{sample.filename}: true={(positive_class if sample.label == 1 else negative_class)} ({sample.label}), "
+                f"predicted={(positive_class if predicted == 1 else negative_class)} ({predicted}), "
+                f"p({positive_class})={probability:.6f}, subject_id={sample.subject_id}, "
                 f"illumination={sample.illumination_type}, grade={sample.cataract_grade}"
             )
     lines.extend(
@@ -192,11 +207,11 @@ def build_report(
             "",
             "LIMITATIONS",
             "-" * 80,
-            "The dataset is small (110 training samples).",
-            "The validation set has only 15 usable images, so model-selection estimates are unstable.",
-            "The locked test set has only 35 usable images.",
-            "The test set is class-imbalanced (8 Normal vs 27 Cataract).",
-            "This is a broad Normal-vs-Cataract baseline, not the final early-stage cataract task.",
+            f"The dataset is small ({sum(train_expected.values())} training samples).",
+            f"The validation set has only {sum(val_expected.values())} usable images, so model-selection estimates are unstable.",
+            f"The locked test set has only {sum(test_expected.values())} usable images.",
+            f"The test set is class-imbalanced ({test_expected['Normal']} {negative_class} vs {test_expected['Cataract']} {positive_class}).",
+            f"This is the controlled {task_name} baseline.",
             "Percentages can change substantially with one image; raw counts should be emphasized.",
             "",
             "BASELINE VERDICT",
@@ -207,9 +222,13 @@ def build_report(
             "NEXT-STEP RECOMMENDATION",
             "-" * 80,
             (
-                "The software pipeline is ready to be reconfigured for Normal vs Mild Cataract, "
-                "but the new task should begin with a fresh class-count and split-adequacy review. "
-                "Do not reuse locked-test outcomes to tune that future task."
+                "Treat this as the initial thesis-task baseline and diagnose its fixed-threshold "
+                "false-positive/false-negative pattern before proposing later improvements. "
+                "Do not tune this completed run from locked-test outcomes."
+                if grades is not None
+                else
+                "The software pipeline can be reconfigured for a narrower label policy only after "
+                "a fresh class-count and split-adequacy review. Do not reuse locked-test outcomes to tune it."
             ),
         ]
     )
@@ -265,15 +284,31 @@ def main() -> int:
     test_metrics = calculate_metrics(test_true, test_probabilities, threshold)
     test_predicted = np.array(test_metrics.pop("predicted_labels"), dtype=int)
     validation_metrics.pop("predicted_labels")
+    negative_class = config["label_policy"].get("negative_class", "Normal")
+    positive_class = config["label_policy"].get("positive_class", "Cataract")
+    class_names = (negative_class, positive_class)
+    task_name = config["experiment"].get("display_name", "Normal vs Cataract")
 
     export_predictions(
         test_samples,
         test_probabilities,
         test_predicted,
         predictions_dir / "test_predictions.csv",
+        class_names,
     )
-    plot_roc(test_true, test_probabilities, test_metrics["roc_auc"], figures_dir / "test_roc_curve.png")
-    plot_confusion(test_metrics, figures_dir / "test_confusion_matrix.png")
+    plot_roc(
+        test_true,
+        test_probabilities,
+        test_metrics["roc_auc"],
+        figures_dir / "test_roc_curve.png",
+        title=f"Locked Test ROC: {task_name}",
+    )
+    plot_confusion(
+        test_metrics,
+        figures_dir / "test_confusion_matrix.png",
+        class_names=class_names,
+        title=f"Locked Test Confusion Matrix: {task_name}",
+    )
 
     errors = [
         (sample, float(probability), int(predicted))
@@ -284,7 +319,8 @@ def main() -> int:
     ]
     verdict, verdict_reason = choose_verdict(test_metrics)
     metrics_output = {
-        "positive_class": "Cataract",
+        "task": task_name,
+        "positive_class": positive_class,
         "threshold": threshold,
         "validation": validation_metrics,
         "test": test_metrics,
@@ -306,4 +342,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

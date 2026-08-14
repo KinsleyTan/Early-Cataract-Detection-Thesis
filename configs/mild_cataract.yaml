@@ -1,0 +1,93 @@
+experiment:
+  name: efficientnetb0_normal_vs_mild_cataract
+  display_name: Normal vs Mild Cataract
+  seed: 2026
+
+paths:
+  dataset_root: ../Fixed Dataset/Clean
+  checkpoints_dir: outputs/mild_cataract/checkpoints
+  figures_dir: outputs/mild_cataract/figures
+  predictions_dir: outputs/mild_cataract/predictions
+  reports_dir: outputs/mild_cataract/reports
+  keras_home: .keras
+  audit_report: outputs/mild_cataract/reports/task_audit.txt
+
+fixed_splits:
+  train:
+    workbook: train.xlsx
+    sha256: 9A3177E2060A3886D8705EC3BE47B30B6A926D96BE32016B57F623C37B46C4BA
+    expected_total_rows: 140
+    expected_usable:
+      Normal: 45
+      Cataract: 54
+  validation:
+    workbook: val.xlsx
+    sha256: 9A44AFEA0DD9143A3BF4874E4642AB12796653F3A1CC7C13EC905B8DB027C492
+    expected_total_rows: 20
+    expected_usable:
+      Normal: 5
+      Cataract: 7
+  test:
+    workbook: test.xlsx
+    sha256: 91EF0D53A2C5D48510FEB26C763B5D6C10003331ACFB2A0439C290A01D4E5106
+    expected_total_rows: 40
+    expected_usable:
+      Normal: 8
+      Cataract: 21
+
+label_policy:
+  class_to_label:
+    Normal: 0
+    Cataract: 1
+  excluded_diagnoses:
+    - Other
+  cataract_grades:
+    - mild
+  negative_class: Normal
+  positive_class: Mild Cataract
+
+data:
+  image_size: [224, 224]
+  channels: 3
+  batch_size: 8
+  cache_in_memory: false
+
+augmentation:
+  enabled: true
+  rotation_factor: 0.025
+  zoom_factor: 0.05
+  brightness_factor: 0.04
+  contrast_factor: 0.05
+  horizontal_flip: false
+
+model:
+  architecture: EfficientNetB0
+  weights: imagenet
+  include_top: false
+  backbone_trainable: false
+  dense_units: 64
+  dropout_rate: 0.30
+  l2_regularization: 0.0001
+
+training:
+  optimizer: Adam
+  learning_rate: 0.001
+  loss: binary_crossentropy
+  epochs: 30
+  monitor: val_loss
+  threshold: 0.5
+  class_weights: null
+  early_stopping_patience: 6
+  reduce_lr_patience: 3
+  reduce_lr_factor: 0.2
+  min_learning_rate: 0.000001
+  fine_tuning: false
+
+audit:
+  ready_phrase: MILD TASK AUDIT PASSED
+  phash_threshold: 6
+  minimum_per_class:
+    train: 10
+    validation: 3
+    test: 3
+

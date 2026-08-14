@@ -1,0 +1,30 @@
+﻿filename,subject_id,eye_side,true_label,true_class_name,predicted_probability_cataract,predicted_label,predicted_class_name,correct,outcome
+1076DLPSL (6).jpg,1076,Left,1,Mild Cataract,0.78628063,1,Mild Cataract,True,correct
+1114DLPSL (3).jpg,1114,Left,0,Normal,0.80771708,1,Mild Cataract,False,incorrect
+1136DLPSL (2).jpg,1136,Left,1,Mild Cataract,0.83721435,1,Mild Cataract,True,correct
+1357URPSL (1).jpg,1357,Right,1,Mild Cataract,0.36284447,0,Normal,False,incorrect
+1371DRPSL (5).jpg,1371,Right,1,Mild Cataract,0.26831573,0,Normal,False,incorrect
+1389DRPSL (5).jpg,1389,Right,1,Mild Cataract,0.49196422,0,Normal,False,incorrect
+1396DRPSL (5).jpg,1396,Right,1,Mild Cataract,0.56726915,1,Mild Cataract,True,correct
+1396DRPSL (6).jpg,1396,Right,1,Mild Cataract,0.29326868,0,Normal,False,incorrect
+1506DRPSL (2).jpg,1506,Right,0,Normal,0.50632626,1,Mild Cataract,False,incorrect
+1558DRPSL (2).jpg,1558,Right,1,Mild Cataract,0.54710048,1,Mild Cataract,True,correct
+1585DRPSL (2).jpg,1585,Right,1,Mild Cataract,0.16122124,0,Normal,False,incorrect
+1597DLPSL (1).jpg,1597,Left,0,Normal,0.43151125,0,Normal,True,correct
+1603DLPSL (2).jpg,1603,Left,1,Mild Cataract,0.37159207,0,Normal,False,incorrect
+1658DRPSL (3).jpg,1658,Right,1,Mild Cataract,0.49022892,0,Normal,False,incorrect
+1693DLPSL (4).jpg,1693,Left,1,Mild Cataract,0.44516248,0,Normal,False,incorrect
+1693DRPSL (3).jpg,1693,Right,1,Mild Cataract,0.16222994,0,Normal,False,incorrect
+1792DLPSL (3).jpg,1792,Left,1,Mild Cataract,0.12585784,0,Normal,False,incorrect
+1841URPSL (3).jpg,1841,Right,0,Normal,0.19933417,0,Normal,True,correct
+1877DLPSL (4).jpg,1877,Left,1,Mild Cataract,0.27921891,0,Normal,False,incorrect
+1906URPSL (2).jpg,1906,Right,1,Mild Cataract,0.31974739,0,Normal,False,incorrect
+1915DLPSL (2).jpg,1915,Left,1,Mild Cataract,0.69736522,1,Mild Cataract,True,correct
+1997ULPSL (1).jpg,1997,Left,1,Mild Cataract,0.16632886,0,Normal,False,incorrect
+11002DRPSL (1).jpg,11002,Right,0,Normal,0.24766041,0,Normal,True,correct
+11094DRPSL (3).jpg,11094,Right,0,Normal,0.19435804,0,Normal,True,correct
+11168DLPSL (1).jpg,11168,Left,1,Mild Cataract,0.64730722,1,Mild Cataract,True,correct
+11194ULPSL (1).jpg,11194,Left,0,Normal,0.37603986,0,Normal,True,correct
+11198DLPSL (3).jpg,11198,Left,1,Mild Cataract,0.80365354,1,Mild Cataract,True,correct
+11217DRPSL (2).jpg,11217,Right,1,Mild Cataract,0.79417062,1,Mild Cataract,True,correct
+11288DLPSL (4).jpg,11288,Left,0,Normal,0.63405436,1,Mild Cataract,False,incorrect

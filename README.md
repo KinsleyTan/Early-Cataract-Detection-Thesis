@@ -29,14 +29,17 @@ in `[0, 255]`. TensorFlow/Keras EfficientNetB0 contains the single internal
 ## Structure
 
 ```text
-configs/baseline.yaml       Reproducible experiment and fixed-dataset fingerprints
+configs/baseline.yaml       Normal-vs-All-Cataract experiment
+configs/mild_cataract.yaml  Controlled Normal-vs-Mild-Cataract experiment
 src/audit.py                Dataset integrity audit
+src/task_audit.py           Label-filtered counts/leakage/duplicate audit
 src/data.py                 Metadata selection and tf.data construction
 src/model.py                EfficientNetB0 and conservative augmentation
 src/train.py                Train/validation-only fitting and checkpoint selection
 src/evaluate.py             Validation report and locked test evaluation
 src/metrics.py              Binary metrics and diagnostic plots
 src/sanity.py               Hard pre-training gates
+src/compare.py              Completed-baseline comparison report
 src/utils.py                Seeds, paths, hashes, and configuration
 ```
 
@@ -63,7 +66,7 @@ test workbook is used by the separate evaluator only after checkpoint selection.
 The evaluator refuses to overwrite an existing locked-test result unless the
 operator explicitly supplies `--allow-repeat`.
 
-## Completed run
+## Completed Normal-vs-All-Cataract run
 
 - Best frozen-backbone checkpoint: epoch 3 of 9 run
 - Validation: accuracy 66.7%, ROC-AUC 0.760
@@ -71,7 +74,31 @@ operator explicitly supplies `--allow-repeat`.
 - Confusion matrix: TN=4, FP=4, FN=6, TP=21
 - Verdict: `BASELINE WORKS WITH WARNINGS`
 
-See `outputs/reports/baseline_results.txt` for the full report and every
-misclassified test image. This project does not yet implement Normal-vs-Mild
-classification, ROI localization, segmentation, Grad-CAM, explainability,
-uncertainty estimation, or architecture/optimizer comparisons.
+See `outputs/reports/baseline_results.txt` for the full broad-cataract report.
+
+## Controlled Normal-vs-Mild-Cataract run
+
+The Mild task changes only the label filter and experiment-specific output
+paths. Its training protocol is identical to the first run.
+
+```powershell
+.\.venv\Scripts\python.exe src\task_audit.py --config configs\mild_cataract.yaml --reference-config configs\baseline.yaml
+.\.venv\Scripts\python.exe src\sanity.py --config configs\mild_cataract.yaml
+.\.venv\Scripts\python.exe src\train.py --config configs\mild_cataract.yaml
+.\.venv\Scripts\python.exe src\evaluate.py --config configs\mild_cataract.yaml
+.\.venv\Scripts\python.exe src\compare.py
+```
+
+- Train: 45 Normal + 54 Mild Cataract = 99
+- Validation: 5 Normal + 7 Mild Cataract = 12
+- Locked test: 8 Normal + 21 Mild Cataract = 29
+- Best checkpoint: epoch 11 of 17 run
+- Locked test: accuracy 44.8%, sensitivity 38.1%, specificity 62.5%, ROC-AUC 0.524
+- Confusion matrix: TN=5, FP=3, FN=13, TP=8
+- Verdict: `BASELINE UNRELIABLE`
+
+See `outputs/mild_cataract/reports/baseline_results.txt` for every Mild-task
+error and `outputs/reports/baseline_comparison.txt` for the controlled
+comparison. This project still does not implement ROI localization,
+segmentation, Grad-CAM, explainability, uncertainty estimation, fine-tuning,
+architecture comparisons, optimizer comparisons, or threshold tuning.
