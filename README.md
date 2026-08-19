@@ -40,6 +40,12 @@ src/evaluate.py             Validation report and locked test evaluation
 src/metrics.py              Binary metrics and diagnostic plots
 src/sanity.py               Hard pre-training gates
 src/compare.py              Completed-baseline comparison report
+src/explainability.py       Checkpoint-only Mild-test Grad-CAM analysis
+src/roi.py                  Deterministic fixed ROI implementation
+src/roi_audit.py            Train-only ROI visual audit and training gate
+src/roi_compare.py          Paired full-image/ROI case transitions
+src/roi_gradcam.py          Post-evaluation ROI Grad-CAM comparison
+src/roi_report.py           Final controlled ROI experiment report
 src/utils.py                Seeds, paths, hashes, and configuration
 ```
 
@@ -100,5 +106,48 @@ paths. Its training protocol is identical to the first run.
 See `outputs/mild_cataract/reports/baseline_results.txt` for every Mild-task
 error and `outputs/reports/baseline_comparison.txt` for the controlled
 comparison. This project still does not implement ROI localization,
-segmentation, Grad-CAM, explainability, uncertainty estimation, fine-tuning,
-architecture comparisons, optimizer comparisons, or threshold tuning.
+segmentation, uncertainty estimation, fine-tuning, architecture comparisons,
+optimizer comparisons, or threshold tuning.
+
+## Mild Cataract Grad-CAM analysis
+
+The inference-only explanation pipeline loads the existing best Mild checkpoint,
+reproduces the locked test probabilities, and explains the positive Mild Cataract
+sigmoid output. It uses EfficientNetB0 `top_conv` because this is the final Conv2D
+layer retaining a spatial feature grid (`7 x 7 x 1280`) before the terminal batch
+normalization and activation.
+
+```powershell
+.\.venv\Scripts\python.exe src\explainability.py --config configs\mild_cataract.yaml
+```
+
+The command does not compile, train, fine-tune, or update the model. It requires
+the computed probabilities to match the saved locked-test CSV within `1e-5`, then
+writes per-image overlays, TP/FN/TN/FP contact sheets, and the exploratory analysis
+under `outputs/mild_cataract/gradcam/`. The focus categories use fixed central,
+border, and bright-pixel proxies; they are not anatomical segmentations or clinical
+ground truth.
+
+## Controlled pupil/lens ROI experiment
+
+`configs/mild_cataract_roi.yaml` changes only the input representation and sends
+all new artifacts to `outputs/mild_cataract/roi_experiment/`. The deterministic
+crop is a centered square whose side is 72% of the source short edge. For the
+uniform 4032x3024 images this is `(left=928, top=424, right=3105, bottom=2601)`.
+
+The required order is audit first, then the unchanged training/evaluation protocol:
+
+```powershell
+.\.venv\Scripts\python.exe src\task_audit.py --config configs\mild_cataract_roi.yaml --reference-config configs\mild_cataract.yaml
+.\.venv\Scripts\python.exe src\roi_audit.py --config configs\mild_cataract_roi.yaml --review-status pending
+# Review every ROI audit sheet before recording pass/fail. Training is blocked while pending.
+.\.venv\Scripts\python.exe src\sanity.py --config configs\mild_cataract_roi.yaml
+.\.venv\Scripts\python.exe src\train.py --config configs\mild_cataract_roi.yaml
+.\.venv\Scripts\python.exe src\evaluate.py --config configs\mild_cataract_roi.yaml
+.\.venv\Scripts\python.exe src\roi_compare.py
+.\.venv\Scripts\python.exe src\roi_gradcam.py
+.\.venv\Scripts\python.exe src\roi_report.py
+```
+
+The completed locked ROI result and its limitations are documented in
+`outputs/mild_cataract/roi_experiment/reports/roi_comparison_report.txt`.

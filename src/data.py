@@ -9,6 +9,7 @@ from typing import Any, Iterable
 
 from openpyxl import load_workbook
 
+from roi import apply_roi_tensor
 from utils import dataset_root
 
 
@@ -42,6 +43,7 @@ class MetadataRow:
     illumination_type: str
     cataract_type: str
     image_quality: str
+    reflection: str
 
 
 @dataclass(frozen=True)
@@ -57,6 +59,7 @@ class Sample:
     illumination_type: str
     cataract_type: str
     image_quality: str
+    reflection: str
     label: int
 
     def to_dict(self) -> dict[str, Any]:
@@ -99,6 +102,7 @@ def load_metadata(config: dict[str, Any], split: str) -> list[MetadataRow]:
                 illumination_type=row.get("slit_lamp_illumination_type", ""),
                 cataract_type=row.get("catataract_type", ""),
                 image_quality=row.get("image_quality", ""),
+                reflection=row.get("reflection", ""),
             )
         )
     workbook.close()
@@ -152,6 +156,7 @@ def select_samples(
                 illumination_type=row.illumination_type,
                 cataract_type=row.cataract_type,
                 image_quality=row.image_quality,
+                reflection=row.reflection,
                 label=class_to_label[diagnosis],
             )
         )
@@ -195,6 +200,9 @@ def build_dataset(
     def decode(path, label):
         content = tf.io.read_file(path)
         image = tf.io.decode_jpeg(content, channels=3)
+        roi_config = config.get("roi", {})
+        if roi_config.get("enabled", False):
+            image = apply_roi_tensor(image, roi_config)
         image = tf.image.resize(image, image_size, method="bilinear", antialias=True)
         image = tf.clip_by_value(tf.cast(image, tf.float32), 0.0, 255.0)
         image = tf.ensure_shape(image, (image_size[0], image_size[1], 3))
@@ -205,4 +213,3 @@ def build_dataset(
         data = data.cache()
     data = data.batch(batch_size, drop_remainder=False)
     return data.prefetch(tf.data.AUTOTUNE)
-

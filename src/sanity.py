@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import json
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -59,6 +60,22 @@ def run_checks(config: dict[str, Any]) -> dict[str, Any]:
         ready_phrase in audit_text,
         {"path": str(audit_path), "required_phrase": ready_phrase},
     )
+
+    roi_config = config.get("roi", {})
+    if roi_config.get("enabled", False):
+        roi_audit_path = output_path(config, "reports_dir") / "roi_audit.json"
+        roi_audit = (
+            json.loads(roi_audit_path.read_text(encoding="utf-8"))
+            if roi_audit_path.is_file()
+            else {}
+        )
+        checks["roi_visual_audit_passed"] = result(
+            roi_audit.get("training_allowed") is True,
+            {
+                "path": str(roi_audit_path),
+                "review_status": roi_audit.get("review_status", "missing"),
+            },
+        )
 
     all_rows = {}
     all_samples = {}

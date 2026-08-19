@@ -10,9 +10,11 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from PIL import Image
 
 from data import Sample, build_dataset, load_metadata, select_samples
 from metrics import calculate_metrics, plot_confusion, plot_roc
+from roi import roi_box_for_dimensions
 from utils import (
     DEFAULT_CONFIG,
     load_config,
@@ -38,23 +40,45 @@ def export_predictions(
     predicted: np.ndarray,
     path: Path,
     class_names: tuple[str, str],
+    config: dict[str, Any],
 ) -> list[dict[str, Any]]:
     rows = []
     for sample, probability, prediction in zip(samples, probabilities, predicted, strict=True):
-        rows.append(
-            {
+        row = {
                 "filename": sample.filename,
                 "subject_id": sample.subject_id,
                 "eye_side": sample.eye_side,
                 "true_label": sample.label,
                 "true_class_name": class_names[sample.label],
                 "predicted_probability_cataract": f"{float(probability):.8f}",
+                "mild_probability": f"{float(probability):.8f}",
                 "predicted_label": int(prediction),
                 "predicted_class_name": class_names[int(prediction)],
                 "correct": int(prediction) == sample.label,
                 "outcome": "correct" if int(prediction) == sample.label else "incorrect",
+                "illumination_type": sample.illumination_type,
+                "cataract_type": sample.cataract_type,
+                "image_quality": sample.image_quality,
             }
-        )
+        roi_config = config.get("roi", {})
+        if roi_config.get("enabled", False):
+            with Image.open(sample.image_path) as image:
+                box = roi_box_for_dimensions(image.width, image.height, roi_config)
+            row.update(
+                {
+                    "roi_method": roi_config["method"],
+                    "roi_left": box.left,
+                    "roi_top": box.top,
+                    "roi_right": box.right,
+                    "roi_bottom": box.bottom,
+                    "roi_center_x_fraction": roi_config["center_x_fraction"],
+                    "roi_center_y_fraction": roi_config["center_y_fraction"],
+                    "roi_side_fraction_of_short_edge": roi_config[
+                        "side_fraction_of_short_edge"
+                    ],
+                }
+            )
+        rows.append(row)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8-sig") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
@@ -295,6 +319,7 @@ def main() -> int:
         test_predicted,
         predictions_dir / "test_predictions.csv",
         class_names,
+        config,
     )
     plot_roc(
         test_true,

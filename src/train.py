@@ -106,6 +106,25 @@ def main() -> int:
         and history["val_loss"][-1] > history["val_loss"][best_index] * 1.05
         and history["loss"][-1] < history["loss"][best_index]
     )
+    roi_config = config.get("roi", {})
+    image_height, image_width = [int(value) for value in config["data"]["image_size"]]
+    if roi_config.get("enabled", False):
+        preprocessing = (
+            "RGB JPEG -> deterministic fixed center-square ROI "
+            f"(center=({roi_config['center_x_fraction']}, {roi_config['center_y_fraction']}), "
+            f"side={roi_config['side_fraction_of_short_edge']} of short edge) -> "
+            f"bilinear resize to {image_height}x{image_width} -> float32 [0,255]. "
+            "No external normalization "
+            "or preprocess_input; EfficientNetB0's internal Rescaling(1/255) performs "
+            "the only normalization."
+        )
+    else:
+        preprocessing = (
+            f"RGB JPEG -> bilinear resize to {image_height}x{image_width} -> "
+            "float32 [0,255]. "
+            "No external normalization or preprocess_input; EfficientNetB0's internal "
+            "Rescaling(1/255) performs the only normalization."
+        )
     summary = {
         "architecture": config["model"]["architecture"],
         "weights": config["model"]["weights"],
@@ -128,11 +147,9 @@ def main() -> int:
         "non_trainable_parameters": non_trainable_params,
         "checkpoint": str(checkpoint),
         "checkpoint_monitor": train_cfg["monitor"],
-        "preprocessing": (
-            "RGB JPEG -> bilinear resize to 224x224 -> float32 [0,255]. "
-            "No external normalization or preprocess_input; EfficientNetB0's internal "
-            "Rescaling(1/255) performs the only normalization."
-        ),
+        "input_representation": "pupil/lens ROI" if roi_config.get("enabled", False) else "full image",
+        "roi": roi_config if roi_config.get("enabled", False) else None,
+        "preprocessing": preprocessing,
     }
     write_json(reports_dir / "training_summary.json", summary)
     print(f"Training complete. Best epoch: {best_epoch}/{epochs_run}")
